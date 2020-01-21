@@ -1,9 +1,4 @@
 
-# coding: utf-8
-
-# In[ ]:
-
-
 import copy 
 import datetime
 import getpass # for JIRA login
