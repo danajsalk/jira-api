@@ -14,7 +14,7 @@ from jira import JIRA
 from urllib import parse
 
 
-jql = 'project in (ACE) AND created >= -1d ORDER BY created DESC'
+jql = 'project in (test) AND created >= -1d ORDER BY created DESC'
 
 
 MyKeys = {
