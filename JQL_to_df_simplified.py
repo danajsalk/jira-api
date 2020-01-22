@@ -192,48 +192,36 @@ def column_data_edits(data_frame):
 jira_login()
 
 issues = get_issues(jql, results_per_search=1000)
+issues_list = [str(i) for i in issues]
 
-# Create a list of cases from filter
-issues_list = [] 
-for i in issues:
-    g = str(i)
-    issues_list.append(g)
+all_data = [(jira.issue(i)).raw for num, i in enumerate(issues_list)]
+filter_data = [remove_empties_from_dict(i) for i in all_data]
 
-# New list pulling in all JIRA data for every issue
-all_data=[]
-for num, i in enumerate(issues_list):
-    issue = jira.issue(i)
-    all_data.append(issue.raw)
+# Finds every instance of a nested dictionary, relabels key, val
+for m in filter_data:
+    for k, v in m.items():
+        if isinstance(v, list):
+            for j in v:
+                if isinstance(j, dict):
+                    new_dict = {}
+                    re_dict(j, new_dict)
+                    m[k] = new_dict
 
-    filter_data = []
-    for i in all_data:
-        filter_dict = remove_empties_from_dict(i)
-        filter_data.append(filter_dict)
-   
-    # Finds every instance of a nested dictionary, relabels key, val
-    for m in filter_data:
-        for k, v in m.items():
-            if isinstance(v, list):
-                for j in v:
-                    if isinstance(j, dict):
-                        new_dict = {}
-                        re_dict(j, new_dict)
-                        m[k] = new_dict
+        elif isinstance(v, dict):
+            new_dict = {}
+            re_dict(v, new_dict, parent=k)
+            m[k] = new_dict
 
-            elif isinstance(v, dict):
-                new_dict = {}
-                re_dict(v, new_dict, parent=k)
-                m[k] = new_dict
-            
-        elevate_nested_dicts(m)
-        
-    df = pd.DataFrame.from_dict(filter_data)
-    df = column_data_edits(df)
-    
-    for n in columns_dont_need:
-        if n in df.columns:
-            df.drop([n], axis=1, inplace=True)
-    
+    elevate_nested_dicts(m)
+
+df = pd.DataFrame.from_dict(filter_data)
+df = column_data_edits(df)
+
+for n in columns_dont_need:
+    if n in df.columns:
+        df.drop([n], axis=1, inplace=True)
+
 print(len(df))
 print("DONE")
+
 
