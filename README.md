@@ -59,7 +59,7 @@ MyKeys = {
     'fields_comment_total'       : 'Comment_Count'
  }
 ```
-
+With the number of fields per case, it is easier to add fields to the ones you want to keep instead of trying to normalize every field value an issue creates. 
 
 ## Example Fields
 <br>
