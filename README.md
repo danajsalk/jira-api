@@ -61,7 +61,7 @@ MyKeys = {
 ```
 With the number of fields per case, it is easier to add fields to the ones you want to keep instead of trying to normalize every field value an issue creates. 
 
-## Example Fields
+## Example built in Jira Functions per issue
 <br>
 
 The Jira library comes with many built in functions
